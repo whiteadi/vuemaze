@@ -30,7 +30,7 @@ A Vue.js TV show dashboard application that displays TV shows categorized by gen
 ### Mobile Views
 | Dashboard | Show Details |
 |-----------|--------------|
-| ![Dashboard Mobile](docs/screenshots/show-mobile.png) | ![Show Details Mobile](docs/screenshots/show-iPhone.png) |
+| ![Dashboard Mobile](docs/screenshots/dashboard-mobile.png) | ![Show Details Mobile](docs/screenshots/show-iPhone.png) |
 
 ## �🛠 Tech Stack
 

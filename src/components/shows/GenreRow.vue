@@ -74,6 +74,7 @@ function scrollRight() {
 <style scoped>
 .genre-row {
   margin-bottom: var(--spacing-2xl);
+  padding-left: var(--spacing-lg);
 }
 
 .genre-row__header {
