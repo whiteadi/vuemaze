@@ -16,7 +16,23 @@ A Vue.js TV show dashboard application that displays TV shows categorized by gen
 - **Responsive Design**: Mobile-friendly layout that adapts to all screen sizes
 - **Dark Theme**: Modern streaming-app inspired dark theme
 
-## 🛠 Tech Stack
+## � Screenshots
+
+### Dashboard - Desktop View
+![Dashboard Desktop](docs/screenshots/dashboard-desktop.png)
+
+### Show Details - Desktop View
+![Show Details Desktop](docs/screenshots/show-detail-desktop.png)
+
+### Search Results
+![Search Results](docs/screenshots/search-results.png)
+
+### Mobile Views
+| Dashboard | Show Details |
+|-----------|--------------|
+| ![Dashboard Mobile](docs/screenshots/show-mobile.png) | ![Show Details Mobile](docs/screenshots/show-iPhone.png) |
+
+## �🛠 Tech Stack
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
