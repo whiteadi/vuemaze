@@ -17,6 +17,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] - 2026-05-05
+
+### Added
+- Dashboard view with genre-based show organization
+- ShowCard component with poster, rating badge, and hover effects
+- GenreRow component with horizontal scroll and navigation
+- AppHeader component with logo and search input
+- ShowDetailView with comprehensive show information
+- Loading spinner and error message components
+- Real-time search with debouncing
+- 43 unit and component tests
+
+### Technical
+- Responsive design for mobile/tablet/desktop
+- CSS custom properties for theming
+- Accessible components with ARIA labels
+
+---
+
 ## [0.1.0] - 2026-05-05
 
 ### Added
@@ -27,7 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API service for TVMaze endpoints (shows, search, single show)
 - Composables: `useShows`, `useSearch`, `useDebounce`
 - Vue Router configuration with Dashboard and ShowDetail routes
-- Placeholder views for Dashboard and ShowDetail
 - ESLint + Prettier configuration for code quality
 
 ---
