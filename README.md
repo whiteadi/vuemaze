@@ -45,14 +45,36 @@ A Vue.js TV show dashboard application that displays TV shows categorized by gen
 
 ## 📋 Prerequisites
 
-- **Node.js**: v20.19.0 or v22.12.0+ (v22.22.2 recommended)
+- **Node.js**: v20.19.0+ or v22.12.0+ (v22 recommended)
 - **npm**: v10.2.4 or higher
 
-> **Note**: This project uses Node.js 22 features. If you're using nvm, run:
-> ```bash
-> nvm install 22
-> nvm use 22
-> ```
+### Check Your Node Version
+
+```bash
+node --version
+# Should output v20.19.0+ or v22.x
+```
+
+### If You Need to Update Node.js
+
+**Option 1: Using nvm (Node Version Manager)**
+```bash
+nvm install 22
+nvm use 22
+```
+
+**Option 2: Download directly**
+- Visit [nodejs.org](https://nodejs.org/) and download Node.js 22 LTS
+
+**Option 3: Using package managers**
+```bash
+# macOS (Homebrew)
+brew install node@22
+
+# Ubuntu/Debian
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
 
 ## 🚀 Getting Started
 
