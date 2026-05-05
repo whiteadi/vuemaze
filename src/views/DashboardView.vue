@@ -37,9 +37,7 @@ function handleRetry() {
     <main class="dashboard__content">
       <!-- Search Results -->
       <section v-if="query.trim()" class="dashboard__search-results">
-        <h2 class="dashboard__section-title">
-          Search results for "{{ query }}"
-        </h2>
+        <h2 class="dashboard__section-title">Search results for "{{ query }}"</h2>
 
         <div v-if="isSearching" class="dashboard__loading">
           <LoadingSpinner size="md" text="Searching..." />
@@ -53,9 +51,7 @@ function handleRetry() {
           No shows found for "{{ query }}". Try a different search term.
         </p>
 
-        <p v-else class="dashboard__no-results">
-          Enter at least 2 characters to search.
-        </p>
+        <p v-else class="dashboard__no-results">Enter at least 2 characters to search.</p>
       </section>
 
       <!-- Genre Rows (Main Dashboard) -->

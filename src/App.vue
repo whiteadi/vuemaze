@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { provideShows } from '@/composables/useShows'
+
+// Provide shows state to all child components (like React Context.Provider)
+provideShows()
 </script>
 
 <template>

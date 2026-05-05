@@ -1,52 +1,50 @@
 /**
  * Debounce composable
- * Delays the execution of a function until after a specified delay
+ * Delays the update of a value until after a specified delay
+ * Follows Vue best practices for composables using toValue/MaybeRefOrGetter
  */
 
-import { ref, watch, type Ref } from 'vue'
+import { ref, watch, toValue, type Ref, type MaybeRefOrGetter } from 'vue'
 
 /**
  * Creates a debounced ref that updates after a delay
- * @param value - The reactive ref to debounce
- * @param delay - Delay in milliseconds (default: 300ms)
+ * Accepts a ref, getter function, or plain value
+ *
+ * @param source - The source value to debounce (can be ref, getter, or plain value)
+ * @param delay - Delay in milliseconds (can also be ref or getter)
  * @returns A debounced ref
+ *
+ * @example
+ * // With a ref
+ * const query = ref('hello')
+ * const debouncedQuery = useDebouncedRef(query, 300)
+ *
+ * // With a getter (reactive to dependencies)
+ * const debouncedQuery = useDebouncedRef(() => searchInput.value, 300)
+ *
+ * // With reactive delay
+ * const debouncedQuery = useDebouncedRef(query, () => isMobile.value ? 500 : 300)
  */
-export function useDebouncedRef<T>(value: Ref<T>, delay: number = 300): Ref<T> {
-  const debouncedValue = ref(value.value) as Ref<T>
+export function useDebouncedRef<T>(
+  source: MaybeRefOrGetter<T>,
+  delay: MaybeRefOrGetter<number> = 300,
+): Ref<T> {
+  const debouncedValue = ref(toValue(source)) as Ref<T>
   let timeoutId: ReturnType<typeof setTimeout> | null = null
 
-  watch(value, (newValue) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
+  // Watch the source for changes using a getter pattern
+  watch(
+    () => toValue(source),
+    (newValue) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
 
-    timeoutId = setTimeout(() => {
-      debouncedValue.value = newValue
-    }, delay)
-  })
+      timeoutId = setTimeout(() => {
+        debouncedValue.value = newValue
+      }, toValue(delay))
+    },
+  )
 
   return debouncedValue
-}
-
-/**
- * Creates a debounced function
- * @param fn - The function to debounce
- * @param delay - Delay in milliseconds (default: 300ms)
- * @returns A debounced function
- */
-export function useDebounce<T extends (...args: Parameters<T>) => void>(
-  fn: T,
-  delay: number = 300,
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null
-
-  return (...args: Parameters<T>) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId)
-    }
-
-    timeoutId = setTimeout(() => {
-      fn(...args)
-    }, delay)
-  }
 }

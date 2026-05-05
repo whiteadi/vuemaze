@@ -7,13 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
-- TV Show Dashboard with genre-based categorization
-- Horizontal scrollable lists for each genre
-- Show detail page with comprehensive information
-- Search functionality
-- Responsive design for mobile devices
-- Unit tests with Vitest
+---
+
+## [0.3.0] - 2026-05-05
+
+### Changed
+- Refactored state management to use Vue's provide/inject pattern (similar to React Context)
+- State is now scoped to component tree instead of module-level cache
+- Added `provideShows()` function for providing state at app root
+- `useShows()` now consumes state via inject with graceful fallback
+- Updated `useDebouncedRef` to follow Vue best practices using `toValue()` and `MaybeRefOrGetter<T>`
+- `useDebouncedRef` now accepts refs, getter functions, or plain values for both source and delay
+- Changed `hasResults` from manual ref to computed (derived state best practice)
+- Added `onWatcherCleanup` with AbortController to cancel pending search requests (Vue 3.5+)
+- Updated `GenreRow` to use `useTemplateRef()` for template refs (Vue 3.5+)
+- Consolidated duplicate media queries in GenreRow.vue
+
+### Removed
+- Unused CSS variables: `--font-family-mono`, `--shadow-sm`, `--transition-slow`, `--color-accent-soft`, z-index variables (`--z-dropdown`, `--z-fixed`, `--z-modal-backdrop`, `--z-modal`, `--z-tooltip`)
+- Unused CSS classes: `.container`, `.skeleton`, `.fade-*`, `.slide-*` transitions
+- Unused TypeScript type aliases: `ShowsResponse`, `SearchResponse`
+- Unused `useDebounce` function (kept `useDebouncedRef` which is actually used)
+- Unused `tvmazeApi` namespace export and default export
+- Removed `export` from internal TypeScript interfaces (now module-private)
+
+### Technical
+- Cleaner public API surface for types module
+- Vue-idiomatic state management pattern
+- SSR-safe architecture (no global mutable state)
+- Reduced bundle size by removing ~100 lines of dead code
+- Updated tests to match new architecture (44 tests passing)
 
 ---
 

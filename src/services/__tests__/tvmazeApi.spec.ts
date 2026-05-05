@@ -104,9 +104,7 @@ describe('tvmazeApi', () => {
 
       const result = await searchShows('breaking')
 
-      expect(mockFetch).toHaveBeenCalledWith(
-        'https://api.tvmaze.com/search/shows?q=breaking',
-      )
+      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/search/shows?q=breaking')
       expect(result).toEqual(mockResults)
     })
 

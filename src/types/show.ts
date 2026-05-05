@@ -3,61 +3,61 @@
  * @see https://www.tvmaze.com/api
  */
 
-/** Country information */
-export interface Country {
+/** Country information (internal) */
+interface Country {
   name: string
   code: string
   timezone: string
 }
 
-/** Network information (e.g., CBS, NBC) */
-export interface Network {
+/** Network information (e.g., CBS, NBC) (internal) */
+interface Network {
   id: number
   name: string
   country: Country | null
   officialSite: string | null
 }
 
-/** Web channel information (e.g., Netflix, Hulu) */
-export interface WebChannel {
+/** Web channel information (e.g., Netflix, Hulu) (internal) */
+interface WebChannel {
   id: number
   name: string
   country: Country | null
   officialSite: string | null
 }
 
-/** Show schedule */
-export interface Schedule {
+/** Show schedule (internal) */
+interface Schedule {
   time: string
   days: string[]
 }
 
-/** Show rating */
-export interface Rating {
+/** Show rating (internal) */
+interface Rating {
   average: number | null
 }
 
-/** Image URLs */
-export interface ShowImage {
+/** Image URLs (internal) */
+interface ShowImage {
   medium: string
   original: string
 }
 
-/** External IDs for other databases */
-export interface Externals {
+/** External IDs for other databases (internal) */
+interface Externals {
   tvrage: number | null
   thetvdb: number | null
   imdb: string | null
 }
 
-/** API link structure */
-export interface ApiLink {
+/** API link structure (internal) */
+interface ApiLink {
   href: string
   name?: string
 }
 
-/** Links in show response */
-export interface ShowLinks {
+/** Links in show response (internal) */
+interface ShowLinks {
   self: ApiLink
   previousepisode?: ApiLink
   nextepisode?: ApiLink
@@ -101,9 +101,3 @@ export interface GenreGroup {
   name: string
   shows: Show[]
 }
-
-/** API response for paginated shows */
-export type ShowsResponse = Show[]
-
-/** API response for search */
-export type SearchResponse = SearchResult[]

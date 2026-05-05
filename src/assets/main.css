@@ -131,13 +131,6 @@ select {
 }
 
 /* Utility Classes */
-.container {
-  width: 100%;
-  max-width: var(--container-max-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-md);
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -148,52 +141,4 @@ select {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-/* Loading skeleton animation */
-@keyframes skeleton-loading {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--color-background-soft) 25%,
-    var(--color-background-muted) 50%,
-    var(--color-background-soft) 75%
-  );
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
-}
-
-/* Fade transition for Vue Router */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity var(--transition-normal);
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* Slide transition */
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform var(--transition-normal), opacity var(--transition-normal);
-}
-
-.slide-enter-from {
-  transform: translateX(20px);
-  opacity: 0;
-}
-
-.slide-leave-to {
-  transform: translateX(-20px);
-  opacity: 0;
 }

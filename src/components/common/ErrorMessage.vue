@@ -26,7 +26,13 @@ const emit = defineEmits<{
       <p class="error-message__text">{{ message }}</p>
     </div>
     <button class="error-message__retry" @click="emit('retry')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
         <path d="M1 4v6h6" />
         <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
       </svg>

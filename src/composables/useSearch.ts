@@ -1,9 +1,10 @@
 /**
  * Search composable
  * Handles search functionality with debouncing
+ * Uses Vue best practices: computed for derived state, AbortController for cleanup
  */
 
-import { ref, watch, type Ref } from 'vue'
+import { ref, watch, computed, onWatcherCleanup, type Ref, type ComputedRef } from 'vue'
 import { searchShows } from '@/services/tvmazeApi'
 import { useDebouncedRef } from './useDebounce'
 import type { Show } from '@/types/show'
@@ -16,26 +17,27 @@ export function useSearch(): {
   results: Ref<Show[]>
   isSearching: Ref<boolean>
   error: Ref<string | null>
-  hasResults: Ref<boolean>
+  hasResults: ComputedRef<boolean>
   clearSearch: () => void
 } {
   const query = ref('')
   const results = ref<Show[]>([])
   const isSearching = ref(false)
   const error = ref<string | null>(null)
-  const hasResults = ref(false)
+
+  // Derived state should be computed, not manually synced (Vue best practice)
+  const hasResults = computed(() => results.value.length > 0)
 
   // Debounce the query to avoid too many API calls
   const debouncedQuery = useDebouncedRef(query, 300)
 
-  // Watch for debounced query changes
+  // Watch for debounced query changes with cleanup for cancelled requests
   watch(debouncedQuery, async (newQuery) => {
     const trimmedQuery = newQuery.trim()
 
     // Clear results if query is empty
     if (!trimmedQuery) {
       results.value = []
-      hasResults.value = false
       error.value = null
       return
     }
@@ -45,20 +47,40 @@ export function useSearch(): {
       return
     }
 
+    // Create AbortController for this request
+    const controller = new AbortController()
+
+    // Cleanup function - called before next watch trigger (Vue 3.5+ best practice)
+    // This cancels pending requests when user types fast
+    onWatcherCleanup(() => {
+      controller.abort()
+    })
+
     isSearching.value = true
     error.value = null
 
     try {
       const searchResults = await searchShows(trimmedQuery)
-      results.value = searchResults.map((result) => result.show)
-      hasResults.value = results.value.length > 0
+
+      // Check if this request was aborted before updating state
+      if (!controller.signal.aborted) {
+        results.value = searchResults.map((result) => result.show)
+      }
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Search failed'
-      results.value = []
-      hasResults.value = false
-      console.error('Search error:', err)
+      // Ignore abort errors
+      if (err instanceof Error && err.name === 'AbortError') {
+        return
+      }
+
+      if (!controller.signal.aborted) {
+        error.value = err instanceof Error ? err.message : 'Search failed'
+        results.value = []
+        console.error('Search error:', err)
+      }
     } finally {
-      isSearching.value = false
+      if (!controller.signal.aborted) {
+        isSearching.value = false
+      }
     }
   })
 
@@ -68,7 +90,6 @@ export function useSearch(): {
   function clearSearch(): void {
     query.value = ''
     results.value = []
-    hasResults.value = false
     error.value = null
   }
 

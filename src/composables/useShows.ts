@@ -1,9 +1,10 @@
 /**
  * Shows composable
  * Handles fetching, caching, and organizing TV shows by genre
+ * Uses provide/inject for Vue-idiomatic state sharing (similar to React Context)
  */
 
-import { ref, computed, type Ref, type ComputedRef } from 'vue'
+import { ref, computed, provide, inject, type Ref, type ComputedRef, type InjectionKey } from 'vue'
 import { getShowsMultiplePages, getShowById } from '@/services/tvmazeApi'
 import type { Show, GenreGroup } from '@/types/show'
 
@@ -29,20 +30,24 @@ const MAX_SHOWS_PER_GENRE = 20
 /** Minimum rating to include a show */
 const MIN_RATING = 5
 
-/** Cache for shows data */
-let showsCache: Show[] | null = null
-
-/**
- * Composable for managing TV shows data
- */
-export function useShows(): {
+/** Shows state interface */
+interface ShowsState {
   shows: Ref<Show[]>
   genreGroups: ComputedRef<GenreGroup[]>
   isLoading: Ref<boolean>
   error: Ref<string | null>
   fetchShows: () => Promise<void>
   getShowById: (id: number) => Promise<Show | null>
-} {
+}
+
+/** Injection key for type-safe provide/inject */
+const ShowsKey: InjectionKey<ShowsState> = Symbol('shows')
+
+/**
+ * Creates and provides the shows state (call this in App.vue or a parent component)
+ * Similar to creating a Context.Provider in React
+ */
+export function provideShows(): ShowsState {
   const shows = ref<Show[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -100,12 +105,11 @@ export function useShows(): {
   })
 
   /**
-   * Fetches shows from API (with caching)
+   * Fetches shows from API
    */
   async function fetchShows(): Promise<void> {
-    // Return cached data if available
-    if (showsCache) {
-      shows.value = showsCache
+    // Return early if already loaded
+    if (shows.value.length > 0) {
       return
     }
 
@@ -115,7 +119,6 @@ export function useShows(): {
     try {
       const data = await getShowsMultiplePages(3)
       shows.value = data
-      showsCache = data
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch shows'
       console.error('Error fetching shows:', err)
@@ -128,8 +131,8 @@ export function useShows(): {
    * Fetches a single show by ID
    */
   async function fetchShowById(id: number): Promise<Show | null> {
-    // First check cache
-    const cachedShow = showsCache?.find((s) => s.id === id)
+    // First check if we have it in state
+    const cachedShow = shows.value.find((s) => s.id === id)
     if (cachedShow) {
       return cachedShow
     }
@@ -142,7 +145,7 @@ export function useShows(): {
     }
   }
 
-  return {
+  const state: ShowsState = {
     shows,
     genreGroups,
     isLoading,
@@ -150,6 +153,30 @@ export function useShows(): {
     fetchShows,
     getShowById: fetchShowById,
   }
+
+  // Provide the state to all child components
+  provide(ShowsKey, state)
+
+  return state
+}
+
+/**
+ * Composable for consuming shows state (call this in child components)
+ * Similar to useContext() in React
+ */
+export function useShows(): ShowsState {
+  const state = inject(ShowsKey)
+
+  if (!state) {
+    // Fallback: create local state if not provided (for backwards compatibility)
+    // This allows the composable to work even without a provider
+    console.warn(
+      'useShows() was called without a provider. Consider calling provideShows() in App.vue.',
+    )
+    return provideShows()
+  }
+
+  return state
 }
 
 /**

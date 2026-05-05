@@ -91,15 +91,3 @@ export async function searchShows(query: string): Promise<SearchResult[]> {
   }
   return fetchApi<SearchResult[]>(`/search/shows?q=${encodeURIComponent(query)}`)
 }
-
-/**
- * Export all API functions as a namespace
- */
-export const tvmazeApi = {
-  getShows,
-  getShowsMultiplePages,
-  getShowById,
-  searchShows,
-}
-
-export default tvmazeApi

@@ -164,9 +164,35 @@ vuemaze/
 
 ### Why No State Management Library (Pinia/Vuex)?
 
-- **Scope Appropriate**: For this application's complexity, Vue's built-in reactivity (ref/reactive) is sufficient
-- **Composables Pattern**: The `useShows` composable provides centralized data management with caching
+- **Scope Appropriate**: For this application's complexity, Vue's built-in reactivity is sufficient
+- **Provide/Inject Pattern**: Uses Vue's dependency injection (similar to React Context) for shared state
+- **Composables Pattern**: The `useShows` composable provides centralized data management
 - **Avoid Over-engineering**: Adding Pinia would add complexity without significant benefit for this scope
+
+### State Management with Provide/Inject
+
+The app uses Vue's `provide/inject` pattern for state sharing (similar to React Context):
+
+```
+App.vue (provideShows)           ← Creates and provides state
+    ├── DashboardView (useShows) ← Consumes shared state
+    └── ShowDetailView (useShows) ← Consumes same state instance
+```
+
+**Why Symbol + InjectionKey for the key?**
+```typescript
+const ShowsKey: InjectionKey<ShowsState> = Symbol('shows')
+```
+
+- **Type Safety**: `InjectionKey<T>` enables TypeScript to infer the correct type when using `inject()`
+- **Collision Safe**: `Symbol()` is guaranteed unique, preventing conflicts with third-party libraries
+- **Better than strings**: Using `'shows'` as a key would be typo-prone and lose type information
+
+**Benefits:**
+- Component-tree scoped state (not global)
+- SSR-safe (no data leaking between requests)
+- Type-safe with `InjectionKey<T>`
+- No prop drilling needed
 
 ### Why Custom API Service Instead of Axios?
 

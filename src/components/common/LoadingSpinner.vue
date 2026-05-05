@@ -13,14 +13,7 @@ defineProps<{
 <template>
   <div class="loading-spinner" :class="`loading-spinner--${size || 'md'}`">
     <svg class="loading-spinner__icon" viewBox="0 0 50 50" aria-hidden="true">
-      <circle
-        class="loading-spinner__circle"
-        cx="25"
-        cy="25"
-        r="20"
-        fill="none"
-        stroke-width="4"
-      />
+      <circle class="loading-spinner__circle" cx="25" cy="25" r="20" fill="none" stroke-width="4" />
     </svg>
     <span v-if="text" class="loading-spinner__text">{{ text }}</span>
     <span class="visually-hidden">Loading...</span>

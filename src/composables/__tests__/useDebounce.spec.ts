@@ -1,12 +1,12 @@
 /**
- * Unit tests for useDebounce composable
+ * Unit tests for useDebouncedRef composable
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { ref, nextTick } from 'vue'
-import { useDebouncedRef, useDebounce } from '../useDebounce'
+import { useDebouncedRef } from '../useDebounce'
 
-describe('useDebounce', () => {
+describe('useDebouncedRef', () => {
   beforeEach(() => {
     vi.useFakeTimers()
   })
@@ -15,7 +15,7 @@ describe('useDebounce', () => {
     vi.restoreAllMocks()
   })
 
-  describe('useDebouncedRef', () => {
+  describe('with ref source', () => {
     it('should return initial value immediately', () => {
       const source = ref('initial')
       const debounced = useDebouncedRef(source, 300)
@@ -84,44 +84,72 @@ describe('useDebounce', () => {
     })
   })
 
-  describe('useDebounce', () => {
-    it('should debounce function calls', () => {
-      const fn = vi.fn()
-      const debouncedFn = useDebounce(fn, 300)
+  describe('with getter source (Vue best practice)', () => {
+    it('should work with getter function', async () => {
+      const source = ref('initial')
+      // Using getter function instead of ref directly
+      const debounced = useDebouncedRef(() => source.value, 300)
 
-      debouncedFn()
-      debouncedFn()
-      debouncedFn()
+      expect(debounced.value).toBe('initial')
 
-      expect(fn).not.toHaveBeenCalled()
+      source.value = 'changed'
+      await nextTick()
+
+      expect(debounced.value).toBe('initial')
 
       vi.advanceTimersByTime(300)
+      await nextTick()
 
-      expect(fn).toHaveBeenCalledTimes(1)
+      expect(debounced.value).toBe('changed')
     })
 
-    it('should pass arguments to debounced function', () => {
-      const fn = vi.fn()
-      const debouncedFn = useDebounce(fn, 300)
+    it('should work with computed-like getter', async () => {
+      const firstName = ref('John')
+      const lastName = ref('Doe')
 
-      debouncedFn('arg1', 'arg2')
+      // Getter that combines multiple refs
+      const debounced = useDebouncedRef(() => `${firstName.value} ${lastName.value}`, 300)
+
+      expect(debounced.value).toBe('John Doe')
+
+      firstName.value = 'Jane'
+      await nextTick()
       vi.advanceTimersByTime(300)
+      await nextTick()
 
-      expect(fn).toHaveBeenCalledWith('arg1', 'arg2')
+      expect(debounced.value).toBe('Jane Doe')
+    })
+  })
+
+  describe('with reactive delay', () => {
+    it('should support reactive delay via ref', async () => {
+      const source = ref('initial')
+      const delay = ref(300)
+      const debounced = useDebouncedRef(source, delay)
+
+      source.value = 'changed'
+      await nextTick()
+
+      vi.advanceTimersByTime(300)
+      await nextTick()
+
+      expect(debounced.value).toBe('changed')
     })
 
-    it('should use last arguments when called multiple times', () => {
-      const fn = vi.fn()
-      const debouncedFn = useDebounce(fn, 300)
+    it('should support reactive delay via getter', async () => {
+      const source = ref('initial')
+      const isMobile = ref(false)
 
-      debouncedFn('first')
-      debouncedFn('second')
-      debouncedFn('third')
+      // Dynamic delay based on device type
+      const debounced = useDebouncedRef(source, () => (isMobile.value ? 500 : 300))
+
+      source.value = 'changed'
+      await nextTick()
 
       vi.advanceTimersByTime(300)
+      await nextTick()
 
-      expect(fn).toHaveBeenCalledTimes(1)
-      expect(fn).toHaveBeenCalledWith('third')
+      expect(debounced.value).toBe('changed')
     })
   })
 })

@@ -2,9 +2,10 @@
 /**
  * GenreRow Component
  * Displays a horizontal scrollable row of shows for a specific genre
+ * Uses Vue 3.5+ useTemplateRef for template refs
  */
 
-import { ref } from 'vue'
+import { useTemplateRef } from 'vue'
 import type { Show } from '@/types/show'
 import ShowCard from './ShowCard.vue'
 
@@ -13,27 +14,24 @@ defineProps<{
   shows: Show[]
 }>()
 
-const scrollContainer = ref<HTMLElement | null>(null)
+// Vue 3.5+ best practice: useTemplateRef is more explicit than ref<HTMLElement | null>
+const scrollContainer = useTemplateRef<HTMLElement>('scrollContainer')
 
 /** Scroll amount for navigation buttons */
 const SCROLL_AMOUNT = 600
 
 function scrollLeft() {
-  if (scrollContainer.value) {
-    scrollContainer.value.scrollBy({
-      left: -SCROLL_AMOUNT,
-      behavior: 'smooth',
-    })
-  }
+  scrollContainer.value?.scrollBy({
+    left: -SCROLL_AMOUNT,
+    behavior: 'smooth',
+  })
 }
 
 function scrollRight() {
-  if (scrollContainer.value) {
-    scrollContainer.value.scrollBy({
-      left: SCROLL_AMOUNT,
-      behavior: 'smooth',
-    })
-  }
+  scrollContainer.value?.scrollBy({
+    left: SCROLL_AMOUNT,
+    behavior: 'smooth',
+  })
 }
 </script>
 
@@ -42,20 +40,12 @@ function scrollRight() {
     <div class="genre-row__header">
       <h2 class="genre-row__title">{{ title }}</h2>
       <div class="genre-row__controls">
-        <button
-          class="genre-row__nav-btn"
-          @click="scrollLeft"
-          aria-label="Scroll left"
-        >
+        <button class="genre-row__nav-btn" @click="scrollLeft" aria-label="Scroll left">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-        <button
-          class="genre-row__nav-btn"
-          @click="scrollRight"
-          aria-label="Scroll right"
-        >
+        <button class="genre-row__nav-btn" @click="scrollRight" aria-label="Scroll right">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 18l6-6-6-6" />
           </svg>
@@ -149,7 +139,7 @@ function scrollRight() {
   scroll-snap-align: start;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments - consolidated from duplicate media queries */
 @media (max-width: 768px) {
   .genre-row__header {
     padding: 0 var(--spacing-md);
@@ -162,17 +152,6 @@ function scrollRight() {
 
   .genre-row__controls {
     display: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .genre-row__header {
-    padding: 0 var(--spacing-md);
-  }
-
-  .genre-row__shows {
-    padding: var(--spacing-sm) var(--spacing-md);
-    gap: var(--spacing-sm);
   }
 }
 </style>
