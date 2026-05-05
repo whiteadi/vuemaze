@@ -81,7 +81,7 @@ function scrollRight() {
   align-items: center;
   justify-content: space-between;
   margin-bottom: var(--spacing-md);
-  padding: 0 var(--spacing-md);
+  padding: 0 var(--spacing-lg);
 }
 
 .genre-row__title {
@@ -140,7 +140,7 @@ function scrollRight() {
 .genre-row__shows {
   display: flex;
   gap: var(--spacing-md);
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
 }
 
 /* Allow cards to snap when scrolling */
