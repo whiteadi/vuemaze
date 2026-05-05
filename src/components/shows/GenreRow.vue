@@ -151,16 +151,27 @@ function scrollRight() {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .genre-row__header {
-    padding: 0 var(--spacing-sm);
+    padding: 0 var(--spacing-md);
   }
 
   .genre-row__shows {
-    padding: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
     gap: var(--spacing-sm);
   }
 
   .genre-row__controls {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .genre-row__header {
+    padding: 0 var(--spacing-md);
+  }
+
+  .genre-row__shows {
+    padding: var(--spacing-sm) var(--spacing-md);
+    gap: var(--spacing-sm);
   }
 }
 </style>
