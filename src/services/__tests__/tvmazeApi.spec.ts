@@ -32,7 +32,7 @@ describe('tvmazeApi', () => {
 
       const result = await getShows(0)
 
-      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/shows?page=0')
+      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/shows?page=0', undefined)
       expect(result).toEqual(mockShows)
     })
 
@@ -44,7 +44,7 @@ describe('tvmazeApi', () => {
 
       await getShows()
 
-      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/shows?page=0')
+      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/shows?page=0', undefined)
     })
 
     it('should throw ApiError on failed request', async () => {
@@ -75,7 +75,7 @@ describe('tvmazeApi', () => {
 
       const result = await getShowById(169)
 
-      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/shows/169')
+      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/shows/169', undefined)
       expect(result).toEqual(mockShow)
     })
 
@@ -104,7 +104,7 @@ describe('tvmazeApi', () => {
 
       const result = await searchShows('breaking')
 
-      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/search/shows?q=breaking')
+      expect(mockFetch).toHaveBeenCalledWith('https://api.tvmaze.com/search/shows?q=breaking', { signal: undefined })
       expect(result).toEqual(mockResults)
     })
 
@@ -118,6 +118,7 @@ describe('tvmazeApi', () => {
 
       expect(mockFetch).toHaveBeenCalledWith(
         'https://api.tvmaze.com/search/shows?q=game%20of%20thrones',
+        { signal: undefined },
       )
     })
 

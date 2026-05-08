@@ -23,12 +23,14 @@ export class ApiError extends Error {
 
 /**
  * Generic fetch wrapper with error handling
+ * @param endpoint - API endpoint
+ * @param options - Optional fetch options (including AbortSignal for cancellation)
  */
-async function fetchApi<T>(endpoint: string): Promise<T> {
+async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${BASE_URL}${endpoint}`
 
   try {
-    const response = await fetch(url)
+    const response = await fetch(url, options)
 
     if (!response.ok) {
       throw new ApiError(`API request failed: ${response.statusText}`, response.status)
@@ -36,6 +38,10 @@ async function fetchApi<T>(endpoint: string): Promise<T> {
 
     return await response.json()
   } catch (error) {
+    // Re-throw abort errors as-is so they can be caught specifically
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw error
+    }
     if (error instanceof ApiError) {
       throw error
     }
@@ -83,11 +89,12 @@ export async function getShowById(id: number): Promise<Show> {
 /**
  * Searches for shows by name
  * @param query - Search query
+ * @param signal - Optional AbortSignal to cancel the request
  * @returns Array of search results with scores
  */
-export async function searchShows(query: string): Promise<SearchResult[]> {
+export async function searchShows(query: string, signal?: AbortSignal): Promise<SearchResult[]> {
   if (!query.trim()) {
     return []
   }
-  return fetchApi<SearchResult[]>(`/search/shows?q=${encodeURIComponent(query)}`)
+  return fetchApi<SearchResult[]>(`/search/shows?q=${encodeURIComponent(query)}`, { signal })
 }

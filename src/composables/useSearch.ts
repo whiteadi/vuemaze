@@ -60,9 +60,10 @@ export function useSearch(): {
     error.value = null
 
     try {
-      const searchResults = await searchShows(trimmedQuery)
+      // Pass the AbortSignal to actually cancel the network request
+      const searchResults = await searchShows(trimmedQuery, controller.signal)
 
-      // Check if this request was aborted before updating state
+      // Only update state if this request wasn't aborted
       if (!controller.signal.aborted) {
         results.value = searchResults.map((result) => result.show)
       }

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `useDebouncedRef` now accepts refs, getter functions, or plain values for both source and delay
 - Changed `hasResults` from manual ref to computed (derived state best practice)
 - Added `onWatcherCleanup` with AbortController to cancel pending search requests (Vue 3.5+)
+- AbortSignal now properly passed to fetch to actually cancel network requests (not just state updates)
 - Updated `GenreRow` to use `useTemplateRef()` for template refs (Vue 3.5+)
 - Consolidated duplicate media queries in GenreRow.vue
 
